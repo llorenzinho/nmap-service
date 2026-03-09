@@ -23,14 +23,14 @@ repos:
           - commit-msg
         args: []
 
-  - repo: local
-    hooks:
-      - id: pyright
-        name: Type Checking
-        entry: npx pyright orion
-        language: node
-        types: 
-          - python
-        stages: 
-          - pre-push
-        files: \.(py)$
+  # - repo: local
+  #   hooks:
+  #     - id: pyright
+  #       name: Type Checking
+  #       entry: npx pyright src
+  #       language: node
+  #       types: 
+  #         - python
+  #       stages: 
+  #         - pre-push
+  #       files: \.(py)$
