@@ -1,5 +1,3 @@
-from typing import Optional
-
 from nmap_service.config.runner import NmapCfg, RunnerCfg
 from .models import NmapResult, NmapScanConfig
 from .run import CommandRunner
@@ -14,7 +12,7 @@ class NmapRunner(CommandRunner):
     def scan(
         self,
         target: str,
-        ports: Optional[str] = None,
+        ports: str | None = None,
         extra_flags: str = "",
     ) -> NmapResult:
 

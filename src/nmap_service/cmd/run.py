@@ -1,17 +1,16 @@
 import shlex
 import subprocess
-from typing import Optional
 
 from nmap_service.config.runner import RunnerCfg
 from .models import CommandResult
 
 
 class CommandRunner:
-    def __init__(self, cfg: RunnerCfg):
+    def __init__(self, cfg: RunnerCfg) -> None:
         self.timeout = cfg.timeout
         self.shell = cfg.use_shell
 
-    def run(self, command: str, input_data: Optional[str] = None) -> CommandResult:
+    def run(self, command: str, input_data: str | None = None) -> CommandResult:
         args = command if self.shell else shlex.split(command)
 
         proc = subprocess.run(

@@ -9,7 +9,7 @@ from .runner import RunnerCfg
 class AppConfig(BaseSettings):
     runner: RunnerCfg
     db: DatabaseCfg
-    
+
     model_config = SettingsConfigDict(
         env_prefix="APP_",
         env_file=".env",
@@ -18,7 +18,7 @@ class AppConfig(BaseSettings):
 
 @lru_cache
 def cfg() -> AppConfig:
-    return AppConfig()
+    return AppConfig() # type: ignore (populated by BaseSettings)
 
 
 __all__ = ["AppConfig"]

@@ -1,5 +1,7 @@
+# TODO: fix typing pylance
+
+from typing import Any
 import xml.etree.ElementTree as ET
-from typing import Optional
 
 from pydantic import BaseModel, Field, computed_field, field_validator, model_validator
 
@@ -27,7 +29,7 @@ class NmapScanConfig(BaseModel):
     target: str = Field(
         ..., min_length=1, description="Host, IP o range CIDR da scansionare"
     )
-    ports: Optional[str] = Field(
+    ports: str | None = Field(
         default=None,
         description="Port to scan (eq. '22,80,443' oppure '1-1024')",
         pattern=r"^[\d,\-]+$",
@@ -93,7 +95,7 @@ class NmapResult(BaseModel):
 
     @model_validator(mode="before")
     @classmethod
-    def parse_xml_into_hosts(cls, data: dict) -> dict:
+    def parse_xml_into_hosts(cls, data: dict[Any, Any]) -> dict[Any, Any]:
         """Parsa l'XML di nmap e popola automaticamente il campo hosts."""
         xml_string = data.get("xml_output", "")
         if not xml_string:
