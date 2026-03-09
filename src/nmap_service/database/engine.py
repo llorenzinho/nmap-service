@@ -1,12 +1,13 @@
 from contextlib import contextmanager
-from typing import Generator
+from collections.abc import Generator
 
+from sqlalchemy import Engine
 from sqlmodel import Session, SQLModel, create_engine
 
 from nmap_service.config import cfg
 
 
-def create_db_engine():
+def create_db_engine() -> Engine:
     settings = cfg()
     return create_engine(
         settings.db.database_url,
