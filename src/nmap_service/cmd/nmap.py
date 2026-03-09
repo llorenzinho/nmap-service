@@ -1,0 +1,54 @@
+from typing import Optional
+
+from nmap_service.config.runner import NmapCfg, RunnerCfg
+from .models import NmapResult, NmapScanConfig
+from .run import CommandRunner
+
+
+class NmapRunner(CommandRunner):
+    NMAP_BIN = "nmap"
+
+    def __init__(self, cfg: NmapCfg):
+        super().__init__(cfg=RunnerCfg.model_validate(cfg.model_dump()))
+
+    def scan(
+        self,
+        target: str,
+        ports: Optional[str] = None,
+        extra_flags: str = "",
+    ) -> NmapResult:
+
+        config = NmapScanConfig(
+            target=target,
+            ports=ports,
+            extra_flags=extra_flags,
+            timeout=self.timeout,
+        )
+        cmd = self._build_command(config)
+        return self._execute_and_return_result(cmd)
+
+    def _build_command(self, config: NmapScanConfig) -> str:
+        cmd = [self.NMAP_BIN]
+
+        if config.extra_flags:
+            cmd.append(config.extra_flags)
+
+        if config.ports:
+            cmd += ["-p", config.ports]
+
+        cmd += ["-oX", "-"]
+        cmd.append(config.target)
+
+        return " ".join(cmd)
+
+    def _execute_and_return_result(self, command: str) -> NmapResult:
+        result = self.run(command)
+
+        if not result.success:
+            raise RuntimeError(
+                f"nmap returned {result.returncode}.\n"
+                f"cmd: {result.command}\n"
+                f"stderr: {result.stderr}"
+            )
+
+        return NmapResult(xml_output=result.stdout)
