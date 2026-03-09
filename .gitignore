@@ -229,5 +229,8 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
+# IDE
+.vscode
+
 # Black Hole
 black_hole/
