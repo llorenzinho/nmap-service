@@ -63,11 +63,17 @@ class ScanManager:
         status = data.status
         if status != TaskStatus.COMPLETED:
             return JobStatusResponse(status=status)
-        port_list = [d for d in data.ports.split(",") if len(d) > 0] if data.ports else []
+        port_list = (
+            [d for d in data.ports.split(",") if len(d) > 0] if data.ports else []
+        )
         return JobStatusResponse(
             status=status,
             summary=SummaryResponse(
-                elapsed_time=data.completed_at - data.created_at if data.completed_at is not None else None,
+                elapsed_time=(
+                    data.completed_at - data.created_at
+                    if data.completed_at is not None
+                    else None
+                ),
                 ports=port_list,
                 num_ports=len(port_list),
                 target=data.target,
@@ -78,7 +84,7 @@ class ScanManager:
         data = self.repo.list_jobs()
         return [
             JobStatusListResponse(
-                id=d.id, # type: ignore
+                id=d.id,  # type: ignore
                 status=d.status,
                 timestamp=d.started_at,
             )

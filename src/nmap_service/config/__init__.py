@@ -18,7 +18,7 @@ class AppConfig(BaseSettings):
 
 @lru_cache
 def cfg() -> AppConfig:
-    return AppConfig() # type: ignore (populated by BaseSettings)
+    return AppConfig()  # type: ignore (populated by BaseSettings)
 
 
 __all__ = ["AppConfig"]

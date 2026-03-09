@@ -20,12 +20,12 @@ class NmapJobBase(SQLModel):
 
 
 class NmapJob(NmapJobBase, table=True):
-    __tablename__ = "nmap_jobs" # type: ignore
+    __tablename__ = "nmap_jobs"  # type: ignore
 
     id: str | None = Field(default_factory=uuid4, primary_key=True)
 
     # Timing
-    created_at: datetime = Field(default_factory=datetime.utcnow) # type: ignore
+    created_at: datetime = Field(default_factory=datetime.utcnow)  # type: ignore
     started_at: datetime | None = Field(default=None)
     completed_at: datetime | None = Field(default=None)
 

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from concurrent.futures import Future, ThreadPoolExecutor
 from collections.abc import Callable
+from concurrent.futures import Future, ThreadPoolExecutor
 
 from nmap_service.cmd.models import NmapResult, NmapScanConfig
 from nmap_service.cmd.nmap import NmapRunner
@@ -60,7 +60,7 @@ class ThreadScanStrategy(ScanStrategy):
         exc = future.exception()
         if exc is not None:
             # logger.error("[ThreadStrategy] job=%s fallito: %s", job_id, exc)
-            on_error(job_id, exc) # type: ignore
+            on_error(job_id, exc)  # type: ignore
         else:
             # logger.info("[ThreadStrategy] job=%s completato", job_id)
             on_complete(job_id, future.result())

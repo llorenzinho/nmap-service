@@ -1,5 +1,5 @@
-from contextlib import contextmanager
 from collections.abc import Generator
+from contextlib import contextmanager
 
 from sqlalchemy import Engine
 from sqlmodel import Session, SQLModel, create_engine

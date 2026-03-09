@@ -1,7 +1,7 @@
 # TODO: fix typing pylance
 
-from typing import Any
 import xml.etree.ElementTree as ET
+from typing import Any
 
 from pydantic import BaseModel, Field, computed_field, field_validator, model_validator
 
