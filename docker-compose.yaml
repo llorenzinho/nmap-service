@@ -37,6 +37,15 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+        - action: rebuild
+          path: pyproject.toml
+        - action: rebuild
+          path: poetry.lock
 
 volumes:
   postgres-data:
