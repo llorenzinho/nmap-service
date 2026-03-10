@@ -15,6 +15,28 @@ services:
       timeout: 5s
       retries: 5
 
+  api:
+    build:
+      context: .
+      dockerfile: devops/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      APP_DB__USER: postgres
+      APP_DB__PASSWORD: postgres
+      APP_DB__HOST: postgres
+      APP_DB__PORT: 5432
+      APP_DB__DB: nmap
+      APP_DB__ECHO_SQL: "false"
+      APP_SERVER__HOST: "0.0.0.0"
+      APP_SERVER__PORT: 3000
+      APP_LOG__LEVEL: DEBUG
+      APP_RUNNER__TIMEOUT: 300
+      APP_SCAN_STRATEGY__STRATEGY: THREAD
+      APP_SCAN_STRATEGY__N_EXECUTOR: 4
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 volumes:
   postgres-data:
-
