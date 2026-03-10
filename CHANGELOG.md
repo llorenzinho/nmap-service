@@ -1,3 +1,9 @@
+## 0.1.4 (2026-03-10)
+
+### Fix
+
+- useless param in NmapConfig
+
 ## 0.1.3 (2026-03-10)
 
 ### Fix
