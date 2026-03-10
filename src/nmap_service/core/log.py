@@ -18,7 +18,7 @@ class VersionFilter(logging.Filter):
 def get_logger(name: str = __name__) -> logging.Logger:
     cfg_ = cfg()
     logger = logging.getLogger(name)
-    logger.setLevel(cfg_.log.level)
+    logger.setLevel(cfg_.log.level.value)
     if not logger.handlers:
         console_handler = logging.StreamHandler()
         formatter = jsonlogger.JsonFormatter(  # type: ignore (actually exported from python-json-logger)

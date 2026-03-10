@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
+      POSTGRES_DB: nmap
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./config/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
@@ -15,3 +15,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+volumes:
+  postgres-data:
+
