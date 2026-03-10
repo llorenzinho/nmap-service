@@ -3,12 +3,14 @@ from functools import lru_cache
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from .database import DatabaseCfg
+from .log import LogCfg
 from .runner import RunnerCfg
 
 
 class AppConfig(BaseSettings):
     runner: RunnerCfg
     db: DatabaseCfg
+    log: LogCfg
 
     model_config = SettingsConfigDict(
         env_prefix="APP_",

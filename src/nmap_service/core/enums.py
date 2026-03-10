@@ -1,14 +1,28 @@
 from enum import Enum
 
 
-class ScanType(Enum, str):
+class ScanType(str, Enum):
     QUICK = "QUICK"
     FULL = "FULL"
     SERVICE_DETECTION = "SERVICE_DETECTION"
 
 
-class TaskStatus(Enum, str):
+class TaskStatus(str, Enum):
     PENDING = "pending"
     RUNNING = "running"
     COMPLETED = "completed"
     FAILED = "failed"
+
+
+class Environment(str, Enum):
+    DEVELOPMENT = "development"
+    TESTING = "testing"
+    PRODUCTION = "production"
+
+
+class LogLevel(str, Enum):
+    DEBUG = "DEBUG"
+    INFO = "INFO"
+    WARNING = "WARNING"
+    ERROR = "ERROR"
+    CRITICAL = "CRITICAL"
