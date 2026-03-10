@@ -1,6 +1,6 @@
 [project]
 name = "nmap-service"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = [
     {name = "Your Name",email = "you@example.com"}
@@ -58,7 +58,7 @@ name = "cz_conventional_commits"
 version_scheme = "semver"
 bump_message = "chore(release): bump version $current_version → $new_version"
 update_changelog_on_bump = true
-version="0.1.0"
+version="0.1.1"
 changelog_file = "CHANGELOG.md"
 changelog_incremental = true
 version_files = [
