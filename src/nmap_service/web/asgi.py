@@ -7,6 +7,7 @@ from fastapi import FastAPI, status
 from nmap_service.config.app import cfg
 from nmap_service.core import constants
 from nmap_service.database.engine import init_db
+from nmap_service.web.middlewares.logging import RouterLoggingMiddleware
 from .router import router
 
 logging.config.dictConfig(cfg().log.uvicorn_log_config())
@@ -27,6 +28,8 @@ app = FastAPI(
     version=constants.APP_VERSION,
     lifespan=lifespan,
 )
+
+app.add_middleware(RouterLoggingMiddleware)
 
 
 @app.get("/healthz", status_code=status.HTTP_204_NO_CONTENT)
