@@ -22,7 +22,6 @@ class NmapRunner(CommandRunner):
             target=target,
             ports=ports,
             extra_flags=extra_flags,
-            timeout=self.timeout,
         )
         cmd = self.build_command(config)
         self.logger.info(f"Executing command: {cmd}")

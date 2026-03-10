@@ -32,7 +32,7 @@ class RunNmapJobRequest(BaseModel):
     def validate_target(cls, v: str) -> str:
         if is_valid_ip(v) or is_valid_fqdn(v):
             return v
-        raise ValueError(f"'{v}' non è un indirizzo IP o FQDN valido")
+        raise ValueError(f"'{v}' is not a valid IP or FQDN")
 
 
 class NmapResultResponse(BaseModel):

@@ -7,12 +7,12 @@ from pydantic import BaseModel, Field, computed_field, field_validator, model_va
 
 
 class CommandResult(BaseModel):
-    """Risultato dell'esecuzione di un comando di sistema."""
+    """System command execution result"""
 
-    command: str = Field(..., description="Comando eseguito")
-    stdout: str = Field(..., description="Output standard del processo")
-    stderr: str = Field(..., description="Output di errore del processo")
-    returncode: int = Field(..., description="Codice di uscita del processo")
+    command: str = Field(..., description="Executed command")
+    stdout: str = Field(..., description="Proc STDOut")
+    stderr: str = Field(..., description="Proc STDErr")
+    returncode: int = Field(..., description="Proc exit code")
 
     @computed_field
     @property
@@ -24,10 +24,9 @@ class CommandResult(BaseModel):
 
 
 class NmapScanConfig(BaseModel):
-    """Configurazione per una scansione nmap."""
 
     target: str = Field(
-        ..., min_length=1, description="Host, IP o range CIDR da scansionare"
+        ..., min_length=1, description="Host, IP or CIDR"
     )
     ports: str | None = Field(
         default=None,
@@ -35,7 +34,7 @@ class NmapScanConfig(BaseModel):
         pattern=r"^[\d,\-]+$",
     )
     extra_flags: str = Field(
-        default="", description="Flag nmap aggiuntivi (es. '-sV -O')"
+        default="", description="Flag nmap (es. '-sV -O')"
     )
 
     @field_validator("target")
@@ -43,7 +42,7 @@ class NmapScanConfig(BaseModel):
     def target_must_not_be_empty(cls, v: str) -> str:
         if not v.strip():
             raise ValueError(
-                "Il target non può essere una stringa vuota o di soli spazi"
+                "Target must be not empty"
             )
         return v.strip()
 
@@ -52,48 +51,45 @@ class NmapScanConfig(BaseModel):
     def flags_must_not_contain_ox(cls, v: str) -> str:
         if "-oX" in v or "-oA" in v or "-oN" in v or "-oG" in v:
             raise ValueError(
-                "Non specificare flag di output (-oX, -oA, -oN, -oG) in extra_flags: "
-                "viene gestito automaticamente dalla classe."
+                "Do not manually specify (-oX, -oA, -oN, -oG) in extra_flags"
             )
         return v.strip()
 
 
 class PortInfo(BaseModel):
-    """Informazioni su una singola porta aperta."""
 
-    port: int = Field(..., ge=1, le=65535, description="Numero di porta")
-    protocol: str = Field(..., description="Protocollo (tcp/udp)")
+    port: int = Field(..., ge=1, le=65535, description="Port Number")
+    protocol: str = Field(..., description="Protocol (tcp/udp)")
     service: str = Field(
-        default="unknown", description="Nome del servizio rilevato da nmap"
+        default="unknown", description="Service name"
     )
 
     @field_validator("protocol")
     @classmethod
     def protocol_must_be_valid(cls, v: str) -> str:
         if v.lower() not in {"tcp", "udp", "sctp"}:
-            raise ValueError(f"Protocollo non riconosciuto: {v!r}")
+            raise ValueError(f"Unrecognized protocol: {v!r}")
         return v.lower()
 
 
 class HostResult(BaseModel):
-    ip: str = Field(..., description="Indirizzo IP dell'host")
+    ip: str = Field(..., description="Host's IP address")
     open_ports: list[PortInfo] = Field(
-        default_factory=list, description="Elenco porte aperte"
+        default_factory=list, description="Open ports"
     )
 
 
 class NmapResult(BaseModel):
-    """Risultato completo di una scansione nmap."""
+    """Full NMAP scan result"""
 
-    xml_output: str = Field(..., min_length=1, description="Output XML grezzo di nmap")
+    xml_output: str = Field(..., min_length=1, description="RAW XML Output")
     hosts: list[HostResult] = Field(
-        default_factory=list, description="Host rilevati con le loro porte"
+        default_factory=list, description="Hosts"
     )
 
     @model_validator(mode="before")
     @classmethod
     def parse_xml_into_hosts(cls, data: dict[Any, Any]) -> dict[Any, Any]:
-        """Parsa l'XML di nmap e popola automaticamente il campo hosts."""
         xml_string = data.get("xml_output", "")
         if not xml_string:
             return data
@@ -101,7 +97,7 @@ class NmapResult(BaseModel):
         try:
             root = ET.fromstring(xml_string)
         except ET.ParseError as exc:
-            raise ValueError(f"L'output nmap non è XML valido: {exc}") from exc
+            raise ValueError(f"nmap xml output invalid: {exc}") from exc
 
         hosts: list[dict] = []
         for host in root.findall("host"):

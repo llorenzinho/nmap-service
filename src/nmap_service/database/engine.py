@@ -30,14 +30,3 @@ def get_session() -> Generator[Session, None, None]:
     with Session(engine) as session:
         yield session
 
-
-@contextmanager
-def get_session_ctx() -> Generator[Session, None, None]:
-    """Context manager per uso al di fuori di FastAPI."""
-    with Session(engine) as session:
-        try:
-            yield session
-            session.commit()
-        except Exception:
-            session.rollback()
-            raise
