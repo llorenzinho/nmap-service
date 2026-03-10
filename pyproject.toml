@@ -63,6 +63,5 @@ changelog_file = "CHANGELOG.md"
 changelog_incremental = true
 version_files = [
     "pyproject.toml:^version",
-    "src/nmap_service/core/constants.py:APP_VERSION",
-    ""
+    "src/nmap_service/core/constants.py:APP_VERSION"
 ]
