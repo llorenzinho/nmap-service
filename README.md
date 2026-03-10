@@ -42,7 +42,7 @@ Servizio REST API che espone scansioni nmap come job asincroni. Il client invia 
 1. Clonare il repository:
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/llorenzinho/nmap-service.git
 cd nmap-service
 ```
 
@@ -157,7 +157,7 @@ bruno/
 |---|---------------------|--------|---------------------------------------|-------------------------------------|
 | 1 | Submit Scan         | POST   | `/api/v1/scans`                       | Avvia una scansione, salva `scan_id`|
 | 2 | List Scans          | GET    | `/api/v1/scans`                       | Elenca tutti i job                  |
-| 3 | Get Scan Results    | GET    | `/api/v1/scans/:scan_id/results`      | Recupera lo stato                   |
+| 3 | Get Scan Results    | GET    | `/api/v1/scans/:scan_id`              | Recupera lo stato                   |
 | 3 | Get Scan Results    | GET    | `/api/v1/scans/:scan_id/results`      | Recupera i risultati                |
 
 ### Tipi di scansione disponibili
