@@ -4,9 +4,11 @@ from concurrent.futures import Future, ProcessPoolExecutor, ThreadPoolExecutor
 
 from nmap_service.cmd.models import NmapResult, NmapScanConfig
 from nmap_service.cmd.nmap import NmapRunner
+from nmap_service.core.log import get_logger
 
 OnCompleteCallback = Callable[[str, NmapResult], None]
 OnErrorCallback = Callable[[str, Exception], None]
+OnSubmitMethod = Callable[[str], None]
 
 
 class ScanStrategy(ABC):
@@ -16,6 +18,7 @@ class ScanStrategy(ABC):
         self,
         job_id: str,
         config: NmapScanConfig,
+        on_submit: OnSubmitMethod,
         on_complete: OnCompleteCallback,
         on_error: OnErrorCallback,
     ) -> None: ...
@@ -28,25 +31,26 @@ class LocalScanStrategy(ScanStrategy):
     ):
         self.runner = runner
         self._executor = executor
+        self.logger = get_logger(LocalScanStrategy.__name__)
 
     def launch(
         self,
         job_id: str,
         config: NmapScanConfig,
+        on_submit: OnSubmitMethod,
         on_complete: OnCompleteCallback,
         on_error: OnErrorCallback,
     ) -> None:
-        """Sottomette lo scan al thread pool e aggancia i callback sul Future."""
-
         future: Future[NmapResult] = self._executor.submit(
             self.runner.scan, config.target, config.ports, config.extra_flags
         )
+        on_submit(job_id)
 
         future.add_done_callback(
             lambda f: self._handle_future(f, job_id, on_complete, on_error)
         )
 
-        # logger.info("[ThreadStrategy] job=%s avviato su thread pool", job_id)
+        self.logger.debug(f"Submitted job {job_id}")
 
     def _handle_future(
         self,
@@ -55,11 +59,10 @@ class LocalScanStrategy(ScanStrategy):
         on_complete: OnCompleteCallback,
         on_error: OnErrorCallback,
     ) -> None:
-        """Invocato automaticamente dal ThreadPoolExecutor al termine del Future."""
         exc = future.exception()
         if exc is not None:
-            # logger.error("[ThreadStrategy] job=%s fallito: %s", job_id, exc)
+            self.logger.error(f"Job {job_id} failed", "exc", str(exc))
             on_error(job_id, exc)  # type: ignore
         else:
-            # logger.info("[ThreadStrategy] job=%s completato", job_id)
+            self.logger.info(f"Job {job_id} done")
             on_complete(job_id, future.result())

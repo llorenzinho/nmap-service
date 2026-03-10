@@ -1,4 +1,5 @@
 from nmap_service.config.runner import NmapCfg, RunnerCfg
+from nmap_service.core.log import get_logger
 from .models import NmapResult, NmapScanConfig
 from .run import CommandRunner
 
@@ -8,6 +9,7 @@ class NmapRunner(CommandRunner):
 
     def __init__(self, cfg: NmapCfg):
         super().__init__(cfg=RunnerCfg.model_validate(cfg.model_dump()))
+        self.logger = get_logger(NmapRunner.__name__)
 
     def scan(
         self,
@@ -23,6 +25,7 @@ class NmapRunner(CommandRunner):
             timeout=self.timeout,
         )
         cmd = self._build_command(config)
+        self.logger.info(f"Executing command: {cmd}")
         return self._execute_and_return_result(cmd)
 
     def _build_command(self, config: NmapScanConfig) -> str:

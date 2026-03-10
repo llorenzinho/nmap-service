@@ -16,7 +16,6 @@ class NmapJobRepository:
         job = NmapJob(
             created_at=datetime.now(),
             target=sch.target,
-            ports=",".join(sch.ports) if sch.ports and len(sch.ports) > 0 else None,
         )
         self.session.add(job)
         self.session.commit()
@@ -38,7 +37,7 @@ class NmapJobRepository:
             return None
         data.status = TaskStatus.COMPLETED
         data.completed_at = datetime.now()
-        data.result = result.model_dump()
+        data.result = [d.model_dump() for d in result.hosts]
         self.session.add(data)
         self.session.commit()
         return data
@@ -49,6 +48,7 @@ class NmapJobRepository:
             return None
         data.status = TaskStatus.FAILED
         data.error_message = str(error)
+        data.completed_at = datetime.now()
         self.session.add(data)
         self.session.commit()
         return data

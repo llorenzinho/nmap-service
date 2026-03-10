@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from pydantic import BaseModel
 
@@ -16,14 +16,18 @@ class CreateJobSchema(SubmitJobSchema):
 
 class SummaryResponse(BaseModel):
     num_ports: int
-    elapsed_time: timedelta | None = None
-    ports: list[str]
+    elapsed_seconds: float | None = None
+    ports: list[int]
     target: str
+
+
+class ErrorSummaryResponse(BaseModel):
+    message: str
 
 
 class JobStatusResponse(BaseModel):
     status: TaskStatus
-    summary: SummaryResponse | None = None
+    summary: SummaryResponse | ErrorSummaryResponse | None = None
 
 
 class JobStatusListResponse(BaseModel):
