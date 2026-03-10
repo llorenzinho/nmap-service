@@ -18,7 +18,7 @@ def list_jobs(manager: ScanManagerDep):
     return data
 
 
-@router.get("{scan_id:str}/results")
+@router.get("/{scan_id:str}/results")
 def get_job_detail(scan_id: str, manager: ScanManagerDep):
     data = manager.get_job_status(scan_id)
     return data
