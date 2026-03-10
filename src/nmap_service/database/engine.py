@@ -4,7 +4,7 @@ from contextlib import contextmanager
 from sqlalchemy import Engine
 from sqlmodel import Session, SQLModel, create_engine
 
-from nmap_service.config import cfg
+from nmap_service.config.app import cfg
 
 
 def create_db_engine() -> Engine:

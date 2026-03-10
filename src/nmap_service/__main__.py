@@ -1,6 +1,6 @@
 import uvicorn
 
-from nmap_service.config import cfg
+from nmap_service.config.app import cfg
 from nmap_service.core.enums import LogLevel
 
 if __name__ == "__main__":

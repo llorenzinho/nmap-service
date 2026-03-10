@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from collections.abc import Callable
-from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import Future, ProcessPoolExecutor, ThreadPoolExecutor
 
 from nmap_service.cmd.models import NmapResult, NmapScanConfig
 from nmap_service.cmd.nmap import NmapRunner
@@ -21,14 +21,13 @@ class ScanStrategy(ABC):
     ) -> None: ...
 
 
-class ThreadScanStrategy(ScanStrategy):
+class LocalScanStrategy(ScanStrategy):
 
-    def __init__(self, runner: NmapRunner, max_workers: int = 4):
+    def __init__(
+        self, runner: NmapRunner, executor: ThreadPoolExecutor | ProcessPoolExecutor
+    ):
         self.runner = runner
-        self._executor = ThreadPoolExecutor(
-            max_workers=max_workers,
-            thread_name_prefix="nmap-scan",
-        )
+        self._executor = executor
 
     def launch(
         self,

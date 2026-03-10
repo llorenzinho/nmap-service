@@ -4,7 +4,7 @@ from typing import Any
 
 import pythonjsonlogger.jsonlogger as jsonlogger
 
-from nmap_service.config import cfg
+from nmap_service.config.app import cfg
 from nmap_service.core.constants import APP_VERSION
 
 

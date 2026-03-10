@@ -26,3 +26,8 @@ class LogLevel(str, Enum):
     WARNING = "WARNING"
     ERROR = "ERROR"
     CRITICAL = "CRITICAL"
+
+
+class ScanStrategyType(str, Enum):
+    THREAD = "THREAD"
+    PROCESS = "PROCESS"

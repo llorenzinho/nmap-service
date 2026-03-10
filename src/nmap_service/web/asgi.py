@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, status
 
-from nmap_service.config import cfg
+from nmap_service.config.app import cfg
 from nmap_service.core import constants
 from nmap_service.database.engine import init_db
 from .router import router
