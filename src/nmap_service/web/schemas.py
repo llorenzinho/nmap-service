@@ -9,7 +9,7 @@ from nmap_service.core.enums import ScanType
 
 
 def is_valid_fqdn(v: str) -> bool:
-    if v == 'localhost':
+    if v == "localhost":
         return True
     pattern = r"^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,63}$"
     return bool(re.match(pattern, v))

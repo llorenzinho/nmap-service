@@ -13,9 +13,13 @@ from .schemas import NmapResultResponse, RunNmapJobRequest
 
 router = APIRouter(prefix="/scans", tags=["v1"])
 
+
 def strip_quotes(v: str) -> str:
-    return v.strip('"\'')
+    return v.strip("\"'")
+
+
 ScanId = Annotated[str, BeforeValidator(strip_quotes)]
+
 
 @router.post("", status_code=status.HTTP_202_ACCEPTED)
 def run_job(manager: ScanManagerDep, body: RunNmapJobRequest) -> str:
@@ -29,7 +33,9 @@ def list_jobs(manager: ScanManagerDep) -> list[JobStatusListResponse]:
 
 
 @router.get("/{scan_id:str}")
-def get_job_detail(scan_id: ScanId, manager: ScanManagerDep) -> JobStatusResponse | None:
+def get_job_detail(
+    scan_id: ScanId, manager: ScanManagerDep
+) -> JobStatusResponse | None:
     data = manager.get_job_detail(scan_id)
     if not data:
         raise HTTPException(
@@ -39,7 +45,9 @@ def get_job_detail(scan_id: ScanId, manager: ScanManagerDep) -> JobStatusRespons
 
 
 @router.get("/{scan_id:str}/results")
-def get_job_result(scan_id: ScanId, manager: ScanManagerDep) -> NmapResultResponse | None:
+def get_job_result(
+    scan_id: ScanId, manager: ScanManagerDep
+) -> NmapResultResponse | None:
     data = manager.get_job_result(scan_id)
     if not data:
         raise HTTPException(
