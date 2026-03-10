@@ -1,0 +1,29 @@
+meta {
+  name: Get Scan Detail
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/scans/:scan_id
+  body: none
+  auth: none
+}
+
+params:path {
+  scan_id: 094ee22c-667d-43f9-a08e-e150df3f2a4a
+}
+
+docs {
+  Get the status and results of a specific scan.
+  
+  Returns:
+  - `status` - pending | running | completed | failed
+  - `summary` (when completed):
+    - `target` - scanned host
+    - `num_ports` - number of open ports
+    - `ports` - list of open port numbers
+    - `elapsed_seconds` - scan duration
+  - `summary` (when failed):
+    - `message` - error description
+}
