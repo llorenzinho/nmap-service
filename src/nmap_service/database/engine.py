@@ -1,5 +1,4 @@
 from collections.abc import Generator
-from contextlib import contextmanager
 
 from sqlalchemy import Engine
 from sqlmodel import Session, SQLModel, create_engine
@@ -29,4 +28,3 @@ def init_db() -> None:
 def get_session() -> Generator[Session, None, None]:
     with Session(engine) as session:
         yield session
-

@@ -25,25 +25,19 @@ class CommandResult(BaseModel):
 
 class NmapScanConfig(BaseModel):
 
-    target: str = Field(
-        ..., min_length=1, description="Host, IP or CIDR"
-    )
+    target: str = Field(..., min_length=1, description="Host, IP or CIDR")
     ports: str | None = Field(
         default=None,
         description="Port to scan (eq. '22,80,443' oppure '1-1024')",
         pattern=r"^[\d,\-]+$",
     )
-    extra_flags: str = Field(
-        default="", description="Flag nmap (es. '-sV -O')"
-    )
+    extra_flags: str = Field(default="", description="Flag nmap (es. '-sV -O')")
 
     @field_validator("target")
     @classmethod
     def target_must_not_be_empty(cls, v: str) -> str:
         if not v.strip():
-            raise ValueError(
-                "Target must be not empty"
-            )
+            raise ValueError("Target must be not empty")
         return v.strip()
 
     @field_validator("extra_flags")
@@ -60,9 +54,7 @@ class PortInfo(BaseModel):
 
     port: int = Field(..., ge=1, le=65535, description="Port Number")
     protocol: str = Field(..., description="Protocol (tcp/udp)")
-    service: str = Field(
-        default="unknown", description="Service name"
-    )
+    service: str = Field(default="unknown", description="Service name")
 
     @field_validator("protocol")
     @classmethod
@@ -74,18 +66,14 @@ class PortInfo(BaseModel):
 
 class HostResult(BaseModel):
     ip: str = Field(..., description="Host's IP address")
-    open_ports: list[PortInfo] = Field(
-        default_factory=list, description="Open ports"
-    )
+    open_ports: list[PortInfo] = Field(default_factory=list, description="Open ports")
 
 
 class NmapResult(BaseModel):
     """Full NMAP scan result"""
 
     xml_output: str = Field(..., min_length=1, description="RAW XML Output")
-    hosts: list[HostResult] = Field(
-        default_factory=list, description="Hosts"
-    )
+    hosts: list[HostResult] = Field(default_factory=list, description="Hosts")
 
     @model_validator(mode="before")
     @classmethod
