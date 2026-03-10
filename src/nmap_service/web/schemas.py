@@ -14,6 +14,6 @@ class RunNmapJobRequest(BaseModel):
 class NmapResultResponse(BaseModel):
     target: str
     start: datetime
-    end: datetime | None
+    end: datetime | None = None
     command: str
     result: list[HostResult]  # TODO: externalize this by using another model
