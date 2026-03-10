@@ -1,0 +1,35 @@
+meta {
+  name: Submit Scan
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/scans
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "target": "scanme.nmap.org",
+    "scan_type": "SERVICE_DETECTION"
+  }
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setEnvVar("scan_id", res.body);
+  }
+}
+
+docs {
+  Submit a new nmap scan job.
+  
+  **scan_type** options:
+  - `QUICK` - fast scan
+  - `FULL` - full port scan
+  - `SERVICE_DETECTION` - service/version detection
+  
+  Returns the `scan_id` string to use in subsequent requests.
+}

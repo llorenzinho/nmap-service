@@ -1,0 +1,6 @@
+{
+  "version": "1",
+  "name": "nmap-service",
+  "type": "collection",
+  "ignore": []
+}

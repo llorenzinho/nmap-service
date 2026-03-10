@@ -1,0 +1,29 @@
+meta {
+  name: Get Scan Results
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/scans/:scan_id/results
+  body: none
+  auth: none
+}
+
+params:path {
+  scan_id: {{scan_id}}
+}
+
+docs {
+  Get the status and results of a specific scan.
+  
+  Returns:
+  - `status` - pending | running | completed | failed
+  - `summary` (when completed):
+    - `target` - scanned host
+    - `num_ports` - number of open ports
+    - `ports` - list of open port numbers
+    - `elapsed_seconds` - scan duration
+  - `summary` (when failed):
+    - `message` - error description
+}
