@@ -16,6 +16,7 @@ class NmapJobRepository:
         job = NmapJob(
             created_at=datetime.now(),
             target=sch.target,
+            command=sch.command,
         )
         self.session.add(job)
         self.session.commit()

@@ -37,9 +37,6 @@ class NmapScanConfig(BaseModel):
     extra_flags: str = Field(
         default="", description="Flag nmap aggiuntivi (es. '-sV -O')"
     )
-    timeout: int = Field(
-        default=300, gt=0, description="Timeout in secondi per la scansione"
-    )
 
     @field_validator("target")
     @classmethod

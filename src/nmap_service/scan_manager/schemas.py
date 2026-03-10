@@ -12,12 +12,12 @@ class SubmitJobSchema(BaseModel):
 
 class CreateJobSchema(SubmitJobSchema):
     extra_flags: str | None = None
+    command: str
 
 
 class SummaryResponse(BaseModel):
     num_ports: int
     elapsed_seconds: float | None = None
-    ports: list[int]
     target: str
 
 

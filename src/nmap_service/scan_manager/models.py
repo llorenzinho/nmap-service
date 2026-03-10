@@ -10,11 +10,9 @@ from nmap_service.core.enums import TaskStatus
 
 
 class NmapJobBase(SQLModel):
-    # Target della scansione
     target: str = Field(index=True, description="IP, range CIDR o hostname")
-
-    # Stato
     status: TaskStatus = Field(default=TaskStatus.PENDING, index=True)
+    command: str
 
 
 class NmapJob(NmapJobBase, table=True):

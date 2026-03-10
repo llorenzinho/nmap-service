@@ -1,8 +1,11 @@
+from datetime import datetime
 from itertools import chain
 
 from nmap_service.cmd.models import NmapResult, NmapScanConfig
+from nmap_service.cmd.nmap import NmapRunner
 from nmap_service.core.enums import ScanType, TaskStatus
 from nmap_service.core.log import get_logger
+from nmap_service.web.schemas import NmapResultResponse
 from .repository import NmapJobRepository
 from .schemas import (
     CreateJobSchema,
@@ -35,11 +38,17 @@ class ScanManager:
             f"Running scan with parameters type: {type.value}, data: {sch.model_dump()}"
         )
         flags = self.__build_flags(type)
+        config = NmapScanConfig(
+            target=sch.target,
+            ports=",".join(sch.ports) if sch.ports else None,
+            extra_flags=flags,
+        )
         job = self.repo.create_job(
             CreateJobSchema(
                 target=sch.target,
                 ports=sch.ports,
                 extra_flags=flags,
+                command=NmapRunner.build_command(config),
             )
         )
         if not job.id:
@@ -50,12 +59,7 @@ class ScanManager:
 
         self.strategy.launch(
             job_id=str(job.id),
-            config=NmapScanConfig(
-                target=sch.target,
-                ports=",".join(sch.ports) if sch.ports else None,
-                extra_flags=flags,
-                timeout=30,  # TODO: use configs
-            ),
+            config=config,
             on_submit=self.__on_submit,
             on_complete=self.__on_complete,
             on_error=self.__on_error,
@@ -71,7 +75,7 @@ class ScanManager:
     def __on_error(self, id: str, e: Exception):
         self.repo.set_job_error(id, e)
 
-    def get_job_status(self, id: str) -> JobStatusResponse | None:
+    def get_job_detail(self, id: str) -> JobStatusResponse | None:
         data = self.repo.get_by_id(id)
         if not data:
             return None
@@ -101,14 +105,13 @@ class ScanManager:
         elapsed = (
             data.completed_at - data.created_at
             if data.completed_at is not None
-            else None
+            else datetime.now() - data.created_at
         )
         t = elapsed.total_seconds() if elapsed else None
         return JobStatusResponse(
             status=status,
             summary=SummaryResponse(
                 elapsed_seconds=t,
-                ports=ports_flat,
                 num_ports=len(ports_flat),
                 target=data.target,
             ),
@@ -124,3 +127,16 @@ class ScanManager:
             )
             for d in data
         ]
+
+    def get_job_result(self, id: str) -> NmapResultResponse | None:
+        data = self.repo.get_by_id(id)
+        if not data:
+            return None
+
+        return NmapResultResponse(
+            target=data.target,
+            command=data.command,
+            start=data.created_at,
+            end=data.completed_at,
+            result=data.result_,
+        )

@@ -24,12 +24,13 @@ class NmapRunner(CommandRunner):
             extra_flags=extra_flags,
             timeout=self.timeout,
         )
-        cmd = self._build_command(config)
+        cmd = self.build_command(config)
         self.logger.info(f"Executing command: {cmd}")
         return self._execute_and_return_result(cmd)
 
-    def _build_command(self, config: NmapScanConfig) -> str:
-        cmd = [self.NMAP_BIN]
+    @staticmethod
+    def build_command(config: NmapScanConfig) -> str:
+        cmd = [NmapRunner.NMAP_BIN]
 
         if config.extra_flags:
             cmd.append(config.extra_flags)
