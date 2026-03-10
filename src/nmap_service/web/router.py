@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, status
 
 from nmap_service.scan_manager.deps import ScanManagerDep
 from nmap_service.scan_manager.schemas import SubmitJobSchema
@@ -7,7 +7,7 @@ from nmap_service.web.schemas import RunNmapJobRequest
 router = APIRouter(prefix="/scans", tags=["v1"])
 
 
-@router.post("")
+@router.post("", status_code=status.HTTP_202_ACCEPTED)
 def run_job(manager: ScanManagerDep, body: RunNmapJobRequest) -> str:
     return manager.submit(type=body.scan_type, sch=SubmitJobSchema(target=body.target))
 

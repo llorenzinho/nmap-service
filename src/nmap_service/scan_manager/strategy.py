@@ -31,7 +31,8 @@ class LocalScanStrategy(ScanStrategy):
     ):
         self.runner = runner
         self._executor = executor
-        self.logger = get_logger(LocalScanStrategy.__name__)
+        strategy = "THREAD" if isinstance(executor, ThreadPoolExecutor) else "PROCESS"
+        self.logger = get_logger(f"{LocalScanStrategy.__name__}-{strategy}")
 
     def launch(
         self,
